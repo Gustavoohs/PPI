@@ -21,14 +21,38 @@
  *                                                                         *
  ***************************************************************************/
 """
-# Import necessary libraries
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QFileDialog
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QDialog
 from qgis.core import *
 import sys, os
 from osgeo import ogr, gdal
 import numpy as np
+from PyQt5 import uic
+
+# Load the UI file
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PPI_dialog.ui'))
+
+class PluginPPIDialog(QDialog, FORM_CLASS):
+    """Dialog class for the Pixel Purity Index Plugin."""
+    def __init__(self, parent=None):
+        """Constructor."""
+        super(PluginPPIDialog, self).__init__(parent)
+        self.setupUi(self)
+
+        # Connect the buttons to their respective functions
+        self.toolButton.clicked.connect(self.open_file)
+        self.toolButton_2.clicked.connect(self.save_result)
+
+    # Add the following method to update the progress bar
+    def update_progress(self, value):
+        self.progressBar.setValue(value)
+
+    # Add the following method to reset the progress bar
+    def reset_progress(self):
+        self.progressBar.reset()
+
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
@@ -241,6 +265,10 @@ class PluginPPI:
            else:
                counts[(s >= s[imax] - threshold_value) | (s <= s[imin] + threshold_value)] += 1
 
+           # Update progress bar
+           progress = int((i / iter_value) * 100)
+           self.dlg.update_progress(progress)
+
        return counts.reshape(shape[:2])
 
     def run(self):
@@ -265,6 +293,9 @@ class PluginPPI:
             iter_value = self.dlg.spinBox.value()
             threshold_value = self.dlg.doubleSpinBox.value()
 
+            # Reset progress bar
+            self.dlg.reset_progress()
+
             # Execute ppi_function
             result = self.ppi_function(src, iter_value=iter_value, threshold_value=threshold_value)
             driver = gdal.GetDriverByName("GTiff")
@@ -278,5 +309,10 @@ class PluginPPI:
             out = None
 
             self.iface.addRasterLayer(self.out)
+
+# Add the following line at the end of your file to instantiate the plugin class
+def classFactory(iface):
+    return PluginPPI(iface)
+
 
            

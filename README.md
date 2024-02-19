@@ -1,5 +1,5 @@
 # PPI
-Welcome to the Pixel Putrity Index plugin!
+Welcome to the Pixel Purity Index plugin!
 
 ![](/icon.png)
 ##

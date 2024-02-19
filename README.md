@@ -1,4 +1,4 @@
-# Histogram Matching
+# PPI
 Welcome to the Pixel Putrity Index plugin!
 
 ![](/icon.png)

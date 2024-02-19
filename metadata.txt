@@ -6,7 +6,7 @@
 name=Pixel Purity Index
 qgisMinimumVersion=3.0
 description=Pixel Purity Index algorithm
-version=0.1
+version=0.2.0
 author=Gustavo Ferreira
 email=gustavoohs@gmail.com
 

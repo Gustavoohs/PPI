@@ -32,7 +32,7 @@ from PyQt5 import uic
 
 # Load the UI file
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PPI_dialog.ui'))
+    os.path.dirname(__file__), 'PPI_dialog_base.ui'))
 
 class PluginPPIDialog(QDialog, FORM_CLASS):
     """Dialog class for the Pixel Purity Index Plugin."""
